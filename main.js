@@ -37,8 +37,9 @@ const getCurrentLocation = () => {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
             };
-            console.log('ok');
-            currentLocation = pos;
+            document.querySelector('#search-direction').setAttribute('data-lat', pos.lat);
+            document.querySelector('#search-direction').setAttribute('data-lng', pos.lng);
+            return pos;
         });
     } else{
         alert("Sorry, browser does not support geolocation!");
