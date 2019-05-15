@@ -1,10 +1,51 @@
+/**
+ * Show HTML elements to allow editing the trip
+ */
+const editTrip = () => {
+    document.querySelector('#search-map').style.display = 'block';
+    document.querySelector('#search-direction').style.display = 'block';
+    document.querySelector('#edit-trip').style.display = 'none';
+    document.querySelector('.search-options').style.paddingTop = '30px';
+}
+
+/**
+ * Hide form after direction request
+ */
+const acceptUserSubmission = () => {
+    document.querySelector('#search-map').style.display = 'none';
+    document.querySelector('#search-direction').style.display = 'none';
+    document.querySelector('#edit-trip').style.display = 'flex';
+    document.querySelector('.search-options').style.paddingTop = 0;
+}
+
 async function findDirection() {
     $('#form-error').text('');
+
+    const submitButton = document.querySelector('#search-direction');
+    
+    if(submitButton.hasAttribute('data-lat') && submitButton.hasAttribute('data-lng')) {
+        const userOrigin = {
+            lat: parseFloat(submitButton.getAttribute('data-lat')),
+            lng: parseFloat(submitButton.getAttribute('data-lng'))
+        };
+        var geocoder = new google.maps.Geocoder;
+        geocoder.geocode({'location': userOrigin}, function(results, status) {
+            if (status === 'OK') {
+                queryForDirection(results[0]);
+            }
+        });
+    } else {
+        queryForDirection();
+    }
+
+}
+
+const queryForDirection = (userOrigin = null) => {
 
     // get origin and destination from the autocomplete widget
     // Here we get a Google Place object
     const positions = {
-        origin: window.originAutocomplete.getPlace(),
+        origin: userOrigin ? userOrigin : window.originAutocomplete.getPlace(),
         destination: window.destinationAutocomplete.getPlace(),
     };
 
@@ -62,6 +103,7 @@ async function findDirection() {
             console.log('status', status);
             if (status === 'OK') {
                 window.googleDirectionRenderer.setDirections(result);
+                acceptUserSubmission();
             } else {
                 $('#form-error').text('no results found');
             }
@@ -71,3 +113,5 @@ async function findDirection() {
         addError('destination-input');
     }
 }
+
+document.querySelector('#edit-trip').addEventListener('click', editTrip);
