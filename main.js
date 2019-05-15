@@ -8,7 +8,7 @@ const tripSeparators = document.querySelectorAll('.trip-separator');
 
 var currentLocation = {};
 
-/**
+/** 
  * Make options appear when typing in the field
  */
 originInput.addEventListener('keyup', e => {
