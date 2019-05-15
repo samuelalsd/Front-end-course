@@ -1,10 +1,28 @@
 async function findDirection() {
     $('#form-error').text('');
 
+    const submitButton = document.querySelector('#search-direction');
+    
+    if(submitButton.hasAttribute('data-lat') && submitButton.hasAttribute('data-lng')) {
+        const userOrigin = {
+            lat: parseFloat(submitButton.getAttribute('data-lat')),
+            lng: parseFloat(submitButton.getAttribute('data-lng'))
+        };
+        var geocoder = new google.maps.Geocoder;
+        geocoder.geocode({'location': userOrigin}, function(results, status) {
+            if (status === 'OK') {
+                queryForDirection(results[0]);
+            }
+        });
+    }
+}
+
+const queryForDirection = userOrigin => {
+
     // get origin and destination from the autocomplete widget
     // Here we get a Google Place object
     const positions = {
-        origin: window.originAutocomplete.getPlace(),
+        origin: userOrigin ? userOrigin : window.originAutocomplete.getPlace(),
         destination: window.destinationAutocomplete.getPlace(),
     };
 
