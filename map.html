@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Google Map Example</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+    <!-- Default style that you can find in style.css -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Fontawesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+</head>
+
+<body>
+    <div id="page-wrapper">
+        <div class="wrapper" id="map-wrapper">
+            <div id="map" class="directionMap" style="overflow: auto !important;"></div>
+        </div>
+        <div class="wrapper" id="app">
+            <div class="wrapper" id="app-header">
+                <h1>Plan your trip</h1>
+                <div id="search-map">
+                    <div class="search-input origin-input" id="default-input">
+                        <i class="fas fa-search"></i>
+                        <input id="origin-input" class="form-control w-auto" name="origin" placeholder="From where?" autocomplete="off"/>
+                    </div>
+                    <span class="btn secondary blue" id="choose-current-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Use current location
+                    </span>
+                    <div class="trip-separator invisible">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+                    <div class="search-input conditional destination-input">
+                        <i class="fas fa-search"></i>
+                        <input id="destination-input" class="form-control w-auto" name="destination" placeholder="To where?" autocomplete="off"/>
+                    </div>
+                </div>
+                <div class="search-options">
+                    <span class="btn secondary">
+                        <i class="fas fa-plus-circle"></i>
+                        Add destination
+                    </span>
+                    <input type="submit" class="btn primary" value="Directions" onclick="findDirection()"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<!-- Usage of JQuery as a dependency of Bootstrap -->
+<!-- JQuery is also used in internal code (map.js / autocomplete.js / direction.js) -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+
+<!-- Usage of Popper as a dependency of Bootstrap -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+		crossorigin="anonymous"></script>
+
+<!-- Usage of Bootstrap JS Library to make Bootstrap CSS elements dynamics -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+		crossorigin="anonymous"></script>
+
+<!-- Usage of lodash as dependency of internal code (map.js / autocomplete.js / direction.js) -->
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js"
+		integrity="sha256-7/yoZS3548fXSRXqc/xYzjsmuW3sFKzuvOCHd06Pmps="
+		crossorigin="anonymous"></script>
+
+<!-- Usage of internal map.js that you can find in the same folder than this file -->
+<!-- map.js contains every methods used to control the map -->
+<script src="map.js"></script>
+
+<!-- Usage of internal autocomplete.js that you can find in the same folder than this file -->
+<!-- autocomplete contains every methods used to add autocomplete feature on inputs -->
+<script src="autocomplete.js"></script>
+
+<!-- Usage of internal direction.js that you can find in the same folder than this file -->
+<!-- direction.js contains every methods used to control the google direction API -->
+<script src="direction.js"></script>
+
+<!-- Usage of internal utils.js that you can find in the same folder than this file -->
+<!-- utils.js contains every methods that are useful for us but that are not related to any service -->
+<script src="utils.js"></script>
+
+<!-- Main scripts -->
+<script src="main.js"></script>
+
+<!-- Main Javascript Script -->
+<script type="text/javascript">
+
+    function googleInit() {
+        initMap();
+
+        //Google Places Service init
+        window.googlePlacesService = new google.maps.places.PlacesService(window.map);
+
+        //Google Direction Service & renderer init
+		window.googleDirectionService = new google.maps.DirectionsService();
+		window.googleDirectionRenderer = new google.maps.DirectionsRenderer();
+		window.googleDirectionRenderer.setMap(map);
+
+		// Make our inputs autocompletable with Google Autocomplete
+        if ((window.originAutocomplete = makeInputAutocomplete('origin-input')) === undefined) {
+            console.warn('unable to set origin-input as autocomplete input');
+        }
+
+        if ((window.destinationAutocomplete = makeInputAutocomplete('destination-input')) === undefined) {
+            console.warn('unable to set destination-input as autocomplete input');
+        }
+    }
+
+    // This method is fired when the whole page has been loaded
+	// If you have to update an HTML Element, do it here to be sure that the element exists
+    $(document).ready(() => {
+
+    });
+
+</script>
+
+<!-- Usage of Google Maps JS API to display the google map -->
+<!-- REPLACE YOUR_API_KEY BY THE API KEY GIVEN BY GOOGLE -->
+<!-- Documentation : https://developers.google.com/maps/documentation/javascript/tutorial -->
+<!-- change googleInit callback if you wanna change the callback given to Google Maps API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDn1seY91-ApEMYNxX_QScEis2YkDVXO5w&libraries=places&callback=googleInit"
+		async defer></script>
+
+</html>

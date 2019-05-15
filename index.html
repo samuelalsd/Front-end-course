@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Google Map Example</title>
+	<!-- Usage of Boostrap CSS library to have predefined CSS Classes -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+		  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+		  crossorigin="anonymous">
+	<!-- Default style that you can find in style.css -->
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<div class="content">
+	<div class="d-inline-block w-100">
+		<div id="origin-form-group" class="form-group float-left">
+			<label for="origin-input">Origin</label>
+			<input id="origin-input"
+				   class="form-control w-auto"
+				   name="origin"
+				   autocomplete="off"/>
+		</div>
+		<div id="destination-form-group" class="form-group float-right">
+			<label for="destination-input">Destination</label>
+			<input id="destination-input"
+				   class="form-control w-auto"
+				   name="destination"
+				   autocomplete="off"/>
+		</div>
+	</div>
+	<div id="map" class="directionMap" style="overflow: auto !important;"></div>
+	<div class="d-flex flex-column">
+		<p id="form-error" class="ml-auto mr-auto text-danger mb-0"></p>
+		<button class="btn btn-primary submitButton" onclick="findDirection()">Submit</button>
+	</div>
+</div>
+</body>
+
+<!-- Usage of JQuery as a dependency of Bootstrap -->
+<!-- JQuery is also used in internal code (map.js / autocomplete.js / direction.js) -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+
+<!-- Usage of Popper as a dependency of Bootstrap -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+		crossorigin="anonymous"></script>
+
+<!-- Usage of Bootstrap JS Library to make Bootstrap CSS elements dynamics -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+		crossorigin="anonymous"></script>
+
+<!-- Usage of lodash as dependency of internal code (map.js / autocomplete.js / direction.js) -->
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js"
+		integrity="sha256-7/yoZS3548fXSRXqc/xYzjsmuW3sFKzuvOCHd06Pmps="
+		crossorigin="anonymous"></script>
+
+<!-- Usage of internal map.js that you can find in the same folder than this file -->
+<!-- map.js contains every methods used to control the map -->
+<script src="map.js"></script>
+
+<!-- Usage of internal autocomplete.js that you can find in the same folder than this file -->
+<!-- autocomplete contains every methods used to add autocomplete feature on inputs -->
+<script src="autocomplete.js"></script>
+
+<!-- Usage of internal direction.js that you can find in the same folder than this file -->
+<!-- direction.js contains every methods used to control the google direction API -->
+<script src="direction.js"></script>
+
+<!-- Usage of internal utils.js that you can find in the same folder than this file -->
+<!-- utils.js contains every methods that are useful for us but that are not related to any service -->
+<script src="utils.js"></script>
+
+<!-- Main scripts -->
+<script src="main.js"></script>
+
+<!-- Main Javascript Script -->
+<script type="text/javascript">
+
+    function googleInit() {
+        initMap();
+
+        //Google Places Service init
+        window.googlePlacesService = new google.maps.places.PlacesService(window.map);
+
+        //Google Direction Service & renderer init
+		window.googleDirectionService = new google.maps.DirectionsService();
+		window.googleDirectionRenderer = new google.maps.DirectionsRenderer();
+		window.googleDirectionRenderer.setMap(map);
+
+		// Make our inputs autocompletable with Google Autocomplete
+        if ((window.originAutocomplete = makeInputAutocomplete('origin-input')) === undefined) {
+            console.warn('unable to set origin-input as autocomplete input');
+        }
+
+        if ((window.destinationAutocomplete = makeInputAutocomplete('destination-input')) === undefined) {
+            console.warn('unable to set destination-input as autocomplete input');
+        }
+    }
+
+    // This method is fired when the whole page has been loaded
+	// If you have to update an HTML Element, do it here to be sure that the element exists
+    $(document).ready(() => {
+
+    });
+
+</script>
+
+<!-- Usage of Google Maps JS API to display the google map -->
+<!-- REPLACE YOUR_API_KEY BY THE API KEY GIVEN BY GOOGLE -->
+<!-- Documentation : https://developers.google.com/maps/documentation/javascript/tutorial -->
+<!-- change googleInit callback if you wanna change the callback given to Google Maps API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDn1seY91-ApEMYNxX_QScEis2YkDVXO5w&libraries=places&callback=googleInit"
+		async defer></script>
+
+</html>
